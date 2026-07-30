@@ -1,0 +1,311 @@
+/* বেসিক রিসেট */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #111827; /* ডার্ক থিম */
+    color: #d1d5db;
+    height: 100vh;
+    overflow: hidden; /* স্ক্রলবার বন্ধ করার জন্য */
+    display: flex;
+    flex-direction: column;
+}
+
+/* টপ বার (মেনু) */
+.top-bar {
+    height: 50px;
+    background-color: #1f2937;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    border-bottom: 1px solid #374151;
+    z-index: 10;
+}
+
+.brand-menu {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.menu-items {
+    display: flex;
+    gap: 15px;
+}
+
+.menu-items span {
+    font-size: 13px;
+    cursor: pointer;
+    padding: 5px 8px;
+    border-radius: 4px;
+    transition: 0.2s;
+}
+
+.menu-items span:hover {
+    background-color: #374151;
+    color: #fff;
+}
+
+.top-actions button {
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    border: none;
+    color: white;
+    padding: 6px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* মূল ওয়ার্কস্পেস */
+.workspace {
+    display: flex;
+    flex: 1;
+    height: calc(100vh - 50px);
+}
+
+/* বাম দিকের টুলবার */
+.left-toolbar {
+    width: 55px;
+    background-color: #1f2937;
+    border-right: 1px solid #374151;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+    gap: 15px;
+    overflow-y: auto;
+}
+
+.tool-btn {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #9ca3af;
+    transition: 0.3s;
+}
+
+.tool-btn:hover, .tool-btn.active {
+    background-color: #3b82f6;
+    color: #fff;
+}
+
+/* কালার পিকারের স্টাইল */
+#color-picker {
+    margin-top: 20px;
+    width: 30px;
+    height: 30px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    background: transparent;
+    padding: 0;
+    overflow: hidden;
+}
+
+#color-picker::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+#color-picker::-webkit-color-swatch {
+    border: none;
+    border-radius: 50%;
+}
+
+/* মাঝখানের ক্যানভাস (যেখানে ছবি থাকবে) */
+.canvas-area {
+    flex: 1;
+    background-color: #0b0f19; /* আরও গাঢ় রঙ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* নির্দেশ অনুযায়ী স্ক্রলবার বন্ধ করা হয়েছে */
+    position: relative;
+    background-image: radial-gradient(#1f2937 1px, transparent 1px);
+    background-size: 20px 20px; /* গ্রিড ব্যাকগ্রাউন্ড */
+}
+
+/* নতুন যোগ করা ইমপোর্ট বক্সের স্টাইল */
+.import-box {
+    width: 300px;
+    height: 300px;
+    border: 2px dashed #4b5563;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #9ca3af;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: rgba(31, 41, 55, 0.5);
+    z-index: 5;
+}
+
+.import-box:hover {
+    border-color: #3b82f6;
+    color: #3b82f6;
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+.import-box i {
+    font-size: 50px;
+    margin-bottom: 15px;
+}
+
+.image-wrapper {
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    max-width: 90%;
+    max-height: 90%;
+    transition: transform 0.3s ease;
+    display: none; /* শুরুতে এটি লুকানো থাকবে, ছবি ইমপোর্ট হলে দেখাবে */
+}
+
+/* ক্যানভাসের স্টাইল (img এর বদলে canvas ব্যবহার করা হলো) */
+.image-wrapper canvas {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    border: 2px solid #374151;
+    background-color: transparent;
+}
+
+/* ডান দিকের প্যানেল (লেয়ার ও সেটিং) */
+.right-panel {
+    width: 300px;
+    background-color: #1f2937;
+    border-left: 1px solid #374151;
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-tabs {
+    display: flex;
+    border-bottom: 1px solid #374151;
+}
+
+.panel-tab {
+    flex: 1;
+    text-align: center;
+    padding: 12px 0;
+    font-size: 13px;
+    cursor: pointer;
+    background: #111827;
+    color: #9ca3af;
+}
+
+.panel-tab.active {
+    background: #1f2937;
+    color: #fff;
+    border-top: 2px solid #3b82f6;
+}
+
+.panel-content {
+    padding: 15px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* স্লাইডার স্টাইলিং (Brightness, Contrast) */
+.adjustment-group {
+    margin-bottom: 20px;
+}
+
+.adjustment-group label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 8px;
+    color: #e5e7eb;
+}
+
+input[type=range] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 100%;
+    background: transparent;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 14px;
+    width: 14px;
+    border-radius: 50%;
+    background: #3b82f6;
+    cursor: pointer;
+    margin-top: -5px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+    background: #4b5563;
+    border-radius: 2px;
+}
+
+/* মোবাইল ন্যাভিগেশন বার (শুধুমাত্র মোবাইলের জন্য) */
+.mobile-bottom-bar {
+    display: none;
+    height: 60px;
+    background-color: #1f2937;
+    border-top: 1px solid #374151;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.mobile-btn {
+    color: #9ca3af;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* রেস্পন্সিভ ডিজাইন (মোবাইল এবং ট্যাবলেটের জন্য) */
+@media (max-width: 900px) {
+    .right-panel {
+        width: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .menu-items {
+        display: none; /* মোবাইলে টপ মেনু লুকানো থাকবে */
+    }
+    
+    .left-toolbar {
+        display: none; /* বাম দিকের টুলবার লুকানো থাকবে */
+    }
+    
+    .right-panel {
+        display: none; /* ডান দিকের প্যানেল লুকানো থাকবে */
+    }
+
+    .mobile-bottom-bar {
+        display: flex; /* মোবাইলের নিচে টুলবার দেখাবে */
+    }
+
+    .canvas-area {
+        height: calc(100vh - 110px); /* টপ এবং বটম বারের জায়গা বাদ দিয়ে */
+    }
+}

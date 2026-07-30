@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PixelPro - Editor Workspace</title>
+    <!-- ফন্ট এবং আইকন লোড করার জন্য -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* বেসিক রিসেট */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #111827; /* ডার্ক থিম */
+            color: #d1d5db;
+            height: 100vh;
+            overflow: hidden; /* স্ক্রলবার বন্ধ করার জন্য */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* টপ বার (মেনু) */
+        .top-bar {
+            height: 50px;
+            background-color: #1f2937;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            border-bottom: 1px solid #374151;
+            z-index: 10;
+        }
+
+        .brand-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .menu-items {
+            display: flex;
+            gap: 15px;
+        }
+
+        .menu-items span {
+            font-size: 13px;
+            cursor: pointer;
+            padding: 5px 8px;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+
+        .menu-items span:hover {
+            background-color: #374151;
+            color: #fff;
+        }
+
+        .top-actions button {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            border: none;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* মূল ওয়ার্কস্পেস */
+        .workspace {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 50px);
+        }
+
+        /* বাম দিকের টুলবার */
+        .left-toolbar {
+            width: 55px;
+            background-color: #1f2937;
+            border-right: 1px solid #374151;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 0;
+            gap: 15px;
+            overflow-y: auto;
+        }
+
+        .tool-btn {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #9ca3af;
+            transition: 0.3s;
+        }
+
+        .tool-btn:hover, .tool-btn.active {
+            background-color: #3b82f6;
+            color: #fff;
+        }
+
+        /* মাঝখানের ক্যানভাস (যেখানে ছবি থাকবে) */
+        .canvas-area {
+            flex: 1;
+            background-color: #0b0f19; /* আরও গাঢ় রঙ */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* নির্দেশ অনুযায়ী স্ক্রলবার বন্ধ করা হয়েছে */
+            position: relative;
+            background-image: radial-gradient(#1f2937 1px, transparent 1px);
+            background-size: 20px 20px; /* গ্রিড ব্যাকগ্রাউন্ড */
+        }
+
+        /* নতুন যোগ করা ইমপোর্ট বক্সের স্টাইল */
+        .import-box {
+            width: 300px;
+            height: 300px;
+            border: 2px dashed #4b5563;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: rgba(31, 41, 55, 0.5);
+            z-index: 5;
+        }
+
+        .import-box:hover {
+            border-color: #3b82f6;
+            color: #3b82f6;
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        .import-box i {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .image-wrapper {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            max-width: 90%;
+            max-height: 90%;
+            transition: transform 0.3s ease;
+            display: none; /* শুরুতে এটি লুকানো থাকবে, ছবি ইমপোর্ট হলে দেখাবে */
+        }
+
+        .image-wrapper img {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            border: 2px solid #374151;
+        }
+
+        /* ডান দিকের প্যানেল (লেয়ার ও সেটিং) */
+        .right-panel {
+            width: 300px;
+            background-color: #1f2937;
+            border-left: 1px solid #374151;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-tabs {
+            display: flex;
+            border-bottom: 1px solid #374151;
+        }
+
+        .panel-tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0;
+            font-size: 13px;
+            cursor: pointer;
+            background: #111827;
+            color: #9ca3af;
+        }
+
+        .panel-tab.active {
+            background: #1f2937;
+            color: #fff;
+            border-top: 2px solid #3b82f6;
+        }
+
+        .panel-content {
+            padding: 15px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        /* স্লাইডার স্টাইলিং (Brightness, Contrast) */
+        .adjustment-group {
+            margin-bottom: 20px;
+        }
+
+        .adjustment-group label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 8px;
+            color: #e5e7eb;
+        }
+
+        input[type=range] {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 14px;
+            width: 14px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            margin-top: -5px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #4b5563;
+            border-radius: 2px;
+        }
+
+        /* মোবাইল ন্যাভিগেশন বার (শুধুমাত্র মোবাইলের জন্য) */
+        .mobile-bottom-bar {
+            display: none;
+            height: 60px;
+            background-color: #1f2937;
+            border-top: 1px solid #374151;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .mobile-btn {
+            color: #9ca3af;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* রেস্পন্সিভ ডিজাইন (মোবাইল এবং ট্যাবলেটের জন্য) */
+        @media (max-width: 900px) {
+            .right-panel {
+                width: 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-items {
+                display: none; /* মোবাইলে টপ মেনু লুকানো থাকবে */
+            }
+            
+            .left-toolbar {
+                display: none; /* বাম দিকের টুলবার লুকানো থাকবে */
+            }
+            
+            .right-panel {
+                display: none; /* ডান দিকের প্যানেল লুকানো থাকবে */
+            }
+
+            .mobile-bottom-bar {
+                display: flex; /* মোবাইলের নিচে টুলবার দেখাবে */
+            }
+
+            .canvas-area {
+                height: calc(100vh - 110px); /* টপ এবং বটম বারের জায়গা বাদ দিয়ে */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- টপ বার -->
+    <header class="top-bar">
+        <div class="brand-menu">
+            <div class="logo">PixelPro</div>
+            <div class="menu-items">
+                <span>File</span>
+                <span>Edit</span>
+                <span>Image</span>
+                <span>Layer</span>
+                <span>Filter</span>
+                <span>View</span>
+            </div>
+        </div>
+        <div class="top-actions">
+            <span style="margin-right: 15px; cursor: pointer; color: #9ca3af;"><i class="fas fa-undo"></i></span>
+            <span style="margin-right: 15px; cursor: pointer; color: #9ca3af;"><i class="fas fa-redo"></i></span>
+            <button><i class="fas fa-download"></i> Export</button>
+        </div>
+    </header>
+
+    <!-- মূল কাজের জায়গা -->
+    <div class="workspace">
+        <!-- বাম দিকের টুলবার -->
+        <aside class="left-toolbar">
+            <div class="tool-btn active" title="Move Tool"><i class="fas fa-arrows-alt"></i></div>
+            <div class="tool-btn" title="Crop Tool"><i class="fas fa-crop-alt"></i></div>
+            <div class="tool-btn" title="Brush Tool"><i class="fas fa-paint-brush"></i></div>
+            <div class="tool-btn" title="Eraser Tool"><i class="fas fa-eraser"></i></div>
+            <div class="tool-btn" title="Text Tool"><i class="fas fa-font"></i></div>
+            <div class="tool-btn" title="Shapes Tool"><i class="fas fa-shapes"></i></div>
+            <div class="tool-btn" title="Color Picker"><i class="fas fa-eye-dropper"></i></div>
+            <div class="tool-btn" title="Zoom Tool"><i class="fas fa-search"></i></div>
+            
+            <!-- Color Selector -->
+            <div style="margin-top: 20px; width: 25px; height: 25px; background: #3b82f6; border-radius: 50%; border: 2px solid #fff; cursor: pointer;"></div>
+        </aside>
+
+        <!-- মাঝখানের ক্যানভাস -->
+        <main class="canvas-area">
+            
+            <!-- ফাইল ইনপুট (লুকানো থাকবে) -->
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+            
+            <!-- ইমপোর্ট বক্স -->
+            <div id="import-box" class="import-box" onclick="document.getElementById('fileInput').click()">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p style="font-weight: 500;">Click to Import Photo</p>
+            </div>
+
+            <!-- ছবির কন্টেইনার (ছবি ইমপোর্ট হলে এটি দৃশ্যমান হবে) -->
+            <div class="image-wrapper" id="image-wrapper">
+                <img id="uploaded-image" src="" alt="Editing Canvas">
+            </div>
+
+        </main>
+
+        <!-- ডান দিকের প্যানেল -->
+        <aside class="right-panel">
+            <div class="panel-tabs">
+                <div class="panel-tab active">Adjustments</div>
+                <div class="panel-tab">Layers</div>
+            </div>
+            
+            <div class="panel-content">
+                <!-- অ্যাডজাস্টমেন্ট স্লাইডার সমূহ -->
+                <div class="adjustment-group">
+                    <label><span>Brightness</span> <span>+10</span></label>
+                    <input type="range" min="-100" max="100" value="10">
+                </div>
+                
+                <div class="adjustment-group">
+                    <label><span>Contrast</span> <span>+25</span></label>
+                    <input type="range" min="-100" max="100" value="25">
+                </div>
+                
+                <div class="adjustment-group">
+                    <label><span>Saturation</span> <span>0</span></label>
+                    <input type="range" min="-100" max="100" value="0">
+                </div>
+                
+                <div class="adjustment-group">
+                    <label><span>Blur</span> <span>0px</span></label>
+                    <input type="range" min="0" max="50" value="0">
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid #374151; margin: 20px 0;">
+
+                <div class="adjustment-group">
+                    <label style="color: #3b82f6; font-weight: 600;"><i class="fas fa-magic"></i> Auto Enhance</label>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- মোবাইলের জন্য বটম টুলবার -->
+    <nav class="mobile-bottom-bar">
+        <div class="mobile-btn" style="color: #3b82f6;"><i class="fas fa-sliders-h"></i></div>
+        <div class="mobile-btn"><i class="fas fa-crop-alt"></i></div>
+        <div class="mobile-btn"><i class="fas fa-magic"></i></div>
+        <div class="mobile-btn"><i class="fas fa-layer-group"></i></div>
+    </nav>
+
+    <!-- জাভাস্ক্রিপ্ট (ছবি ইমপোর্ট করার লজিক) -->
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const importBox = document.getElementById('import-box');
+        const imageWrapper = document.getElementById('image-wrapper');
+        const uploadedImage = document.getElementById('uploaded-image');
+
+        // ফাইল সিলেক্ট করলে যা ঘটবে
+        fileInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // ইমেজের সোর্স সেট করা হচ্ছে
+                    uploadedImage.src = e.target.result;
+                    
+                    // ইমপোর্ট বক্স লুকিয়ে ছবি দেখানো হচ্ছে
+                    importBox.style.display = 'none';
+                    imageWrapper.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+
+</body>
+</html>

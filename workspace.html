@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PixelPro - Editor Workspace</title>
+    <!-- ফন্ট এবং আইকন লোড করার জন্য -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- আমাদের এক্সটার্নাল CSS ফাইল লিংক করা হলো -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- টপ বার -->
+    <header class="top-bar">
+        <div class="brand-menu">
+            <div class="logo">PixelPro</div>
+            <div class="menu-items">
+                <span>File</span>
+                <span>Edit</span>
+                <span>Image</span>
+                <span>Layer</span>
+                <span>Filter</span>
+                <span>View</span>
+            </div>
+        </div>
+        <div class="top-actions">
+            <span id="undo-btn" style="margin-right: 15px; cursor: pointer; color: #9ca3af;" title="Undo"><i class="fas fa-undo"></i></span>
+            <span id="redo-btn" style="margin-right: 15px; cursor: pointer; color: #9ca3af;" title="Redo"><i class="fas fa-redo"></i></span>
+            <button><i class="fas fa-download"></i> Export</button>
+        </div>
+    </header>
+
+    <!-- মূল কাজের জায়গা -->
+    <div class="workspace">
+        <!-- বাম দিকের টুলবার -->
+        <aside class="left-toolbar">
+            <div class="tool-btn active" data-tool="crop" title="Crop Tool (Rotate & Resize)"><i class="fas fa-crop-alt"></i></div>
+            <div class="tool-btn" data-tool="adjust" title="Adjust Tool (Brightness, Contrast)"><i class="fas fa-sliders-h"></i></div>
+            <div class="tool-btn" data-tool="filter" title="Filter Tool (Presets)"><i class="fas fa-filter"></i></div>
+            <div class="tool-btn" data-tool="bg-remove" title="Background Remover"><i class="fas fa-user-slash"></i></div>
+            <div class="tool-btn" data-tool="object-eraser" title="Object Eraser"><i class="fas fa-eraser"></i></div>
+            <div class="tool-btn" data-tool="retouch" title="Retouch Tool (Beauty Edit)"><i class="fas fa-magic"></i></div>
+            <div class="tool-btn" data-tool="text" title="Text Tool"><i class="fas fa-font"></i></div>
+            <div class="tool-btn" data-tool="brush" title="Brush Tool"><i class="fas fa-paint-brush"></i></div>
+            <div class="tool-btn" data-tool="blur" title="Blur Tool"><i class="fas fa-tint"></i></div>
+        </aside>
+
+        <!-- মাঝখানের ক্যানভাস -->
+        <main class="canvas-area">
+            
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+            
+            <div id="import-box" class="import-box" onclick="document.getElementById('fileInput').click()">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p style="font-weight: 500;">Click to Import Photo</p>
+            </div>
+
+            <div class="image-wrapper" id="image-wrapper">
+                <canvas id="editor-canvas"></canvas>
+            </div>
+
+        </main>
+        
+        <!-- ডানদিকের প্যানেলটি এখান থেকে রিমুভ করা হয়েছে -->
+    </div>
+
+    <!-- মোবাইলের জন্য বটম টুলবার -->
+    <nav class="mobile-bottom-bar">
+        <div class="tool-btn active" data-tool="crop" title="Crop Tool (Rotate & Resize)"><i class="fas fa-crop-alt"></i></div>
+        <div class="tool-btn" data-tool="adjust" title="Adjust Tool (Brightness, Contrast)"><i class="fas fa-sliders-h"></i></div>
+        <div class="tool-btn" data-tool="filter" title="Filter Tool (Presets)"><i class="fas fa-filter"></i></div>
+        <div class="tool-btn" data-tool="bg-remove" title="Background Remover"><i class="fas fa-user-slash"></i></div>
+        <div class="tool-btn" data-tool="object-eraser" title="Object Eraser"><i class="fas fa-eraser"></i></div>
+        <div class="tool-btn" data-tool="retouch" title="Retouch Tool (Beauty Edit)"><i class="fas fa-magic"></i></div>
+        <div class="tool-btn" data-tool="text" title="Text Tool"><i class="fas fa-font"></i></div>
+        <div class="tool-btn" data-tool="brush" title="Brush Tool"><i class="fas fa-paint-brush"></i></div>
+        <div class="tool-btn" data-tool="blur" title="Blur Tool"><i class="fas fa-tint"></i></div>
+    </nav>
+
+    <!-- আমাদের এক্সটার্নাল JavaScript ফাইল লিংক করা হলো -->
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelPro - Advanced Photo Editor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* বেসিক রিসেট এবং ফন্ট সেটআপ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #0b0f19; /* ডার্ক ব্যাকগ্রাউন্ড */
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        /* ন্যাভিগেশন বার */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 10%;
+            background: rgba(11, 15, 25, 0.9);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #1f2937;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav ul li a {
+            color: #e5e7eb;
+            text-decoration: none;
+            font-weight: 400;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #3b82f6;
+        }
+
+        .btn-login {
+            padding: 10px 25px;
+            border: 1px solid #3b82f6;
+            background: transparent;
+            color: #3b82f6;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            background: #3b82f6;
+            color: #fff;
+        }
+
+        /* হিরো সেকশন (প্রধান অংশ) */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 150px 10% 100px;
+            background: radial-gradient(circle at center, #1a233a 0%, #0b0f19 70%);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero h1 span {
+            color: #8b5cf6;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #9ca3af;
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+
+        .btn-primary {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+        }
+
+        /* ফিচার সেকশন */
+        .features {
+            padding: 80px 10%;
+            text-align: center;
+        }
+
+        .features h2 {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: #111827;
+            padding: 40px 30px;
+            border-radius: 15px;
+            border: 1px solid #1f2937;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: #3b82f6;
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #f3f4f6;
+        }
+
+        .feature-card p {
+            color: #9ca3af;
+        }
+
+        /* ফুটার */
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: #05080f;
+            border-top: 1px solid #1f2937;
+            color: #6b7280;
+        }
+
+        /* =========================================
+           রেস্পন্সিভ ডিজাইন (মোবাইল স্ক্রিনের জন্য) 
+           ========================================= */
+        @media (max-width: 768px) {
+            /* হেডার লম্বালম্বি সাজানো হলো */
+            header {
+                flex-direction: column;
+                padding: 15px 5%;
+                gap: 15px;
+            }
+            
+            nav ul {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            /* হিরো সেকশনের লেখার সাইজ কমানো হলো */
+            .hero {
+                padding: 160px 5% 60px; /* হেডারের জায়গা ঠিক রাখতে প্যাডিং বাড়ানো হয়েছে */
+            }
+
+            .hero h1 {
+                font-size: 2.2rem; /* মোবাইলে বড় লেখা কেটে যায়, তাই সাইজ ছোট করা হয়েছে */
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .btn-primary {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+
+            /* ফিচার কার্ডগুলো এক লাইনে (Column) দেখানোর জন্য */
+            .features {
+                padding: 60px 5%;
+            }
+
+            .features h2 {
+                font-size: 2rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr; /* মোবাইলে ৩টির বদলে ১টি করে কার্ড দেখাবে */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- হেডার / ন্যাভিগেশন -->
+    <header>
+        <div class="logo">PixelPro</div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Features</a></li>
+                <li><a href="#">Pricing</a></li>
+                <li><a href="#">Tutorials</a></li>
+            </ul>
+        </nav>
+        <button class="btn-login">Log In</button>
+    </header>
+
+    <!-- হিরো সেকশন -->
+    <section class="hero">
+        <h1>Transform Your Photos with <br><span>Next-Gen AI</span> Tools</h1>
+        <p>Professional-grade photo editing directly in your browser. Remove backgrounds, apply stunning filters, and retouch with zero quality loss.</p>
+        <button class="btn-primary" onclick="window.location.href='workspace.html'">Start Editing for Free</button>
+    </section>
+
+    <!-- ফিচার সেকশন -->
+    <section class="features">
+        <h2>Why Choose PixelPro?</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">✂️</div>
+                <h3>AI Background Removal</h3>
+                <p>Erase backgrounds in a single click with our advanced neural network technology.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>Pro Color Grading</h3>
+                <p>Access hundreds of cinematic LUTs and granular control over curves and color balance.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✨</div>
+                <h3>Smart Retouching</h3>
+                <p>Smooth skin, remove blemishes, and enhance facial features effortlessly.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ফুটার -->
+    <footer>
+        <p>&copy; 2026 PixelPro Advanced Editor. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
